@@ -5,6 +5,7 @@ While you could calculate it faster using known equations, this code generates a
 
 Defaults to a standard deck
 
+```
 $ python3 generate_hands.py
 hand type          count    1 in x odds
 ---------------  -------  -------------
@@ -17,3 +18,15 @@ three of a kind    54912             47
 two pair          123552             21
 one pair         1098240              2
 all hands        2598960              1
+```
+
+```
+$ python3 generate_hands.py -r 10 --hand 2
+hand type         count    1 in x odds
+--------------  -------  -------------
+straight flush       40             19
+one pair             60             13
+straight            120              6
+flush               140              5
+all hands           780              1
+```
