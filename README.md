@@ -21,7 +21,7 @@ all hands        2598960              1
 ```
 
 ```
-$ python3 generate_hands.py -r 10 --hand 2
+$ python3 generate_hands.py --ranks 10 --hand_size 2
 hand type         count    1 in x odds
 --------------  -------  -------------
 straight flush       40             19
@@ -29,4 +29,21 @@ one pair             60             13
 straight            120              6
 flush               140              5
 all hands           780              1
+```
+
+```
+$ python3 generate_hands.py -h
+usage: generate_hands.py [-h] [--ranks RANKS] [--suits SUITS]
+                         [--hand_size HAND_SIZE]
+
+Calculate hand odds of a card deck
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --ranks RANKS, -r RANKS
+                        Number of different ranks (default: 13)
+  --suits SUITS, -s SUITS
+                        Number of different suits (default: 4)
+  --hand_size HAND_SIZE
+                        Number of cards per hand (default: 5)
 ```
