@@ -3,10 +3,11 @@ from itertools import combinations
 from collections import defaultdict
 from tabulate import tabulate
 
+
 def create_deck(total_ranks, total_suits):
-    # Create a deck of cards that enumerates every pair of 
+    # Create a deck of cards that enumerates every pair of
     # ranks and suits
-    # output is a list of cards.  
+    # output is a list of cards.
     deck = []
     ranks = range(total_ranks)
     suits = range(total_suits)
@@ -78,7 +79,7 @@ def hand_name(set_representation):
     # [2, 3] represents a full house.  The count of sets
     # is always to be sorted.
 
-    # The current map has names for all sets possible in 
+    # The current map has names for all sets possible in
     # a five-card hand (including some that are not possible
     # with a standard deck).  If simulating hands larger than 5,
     # you may need to add new names (such as three pair).
@@ -92,6 +93,7 @@ def hand_name(set_representation):
             '[2, 3]': 'full house'
             }
     return names.get(set_representation, set_representation)
+
 
 if __name__ == "__main__":
 
@@ -140,4 +142,4 @@ if __name__ == "__main__":
 
     table.append(["all hands", hand_count, 1])
     table.sort(key=lambda x: x[1])
-    print(tabulate(table, headers = headers))
+    print(tabulate(table, headers=headers))
