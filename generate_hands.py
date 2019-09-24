@@ -1,4 +1,5 @@
 import argparse
+from operator import itemgetter
 from itertools import combinations
 from collections import defaultdict
 from tabulate import tabulate
@@ -97,10 +98,22 @@ def hand_name(set_representation):
 
 if __name__ == "__main__":
 
+    def check_more_than_1(value):
+        try:
+            ivalue = int(value)
+        except ValueError:
+            raise argparse.ArgumentTypeError("Argument must be integer larger than 1")
+        if ivalue <= 1:
+            raise argparse.ArgumentTypeError("Argument must be integer larger than 1")
+        return ivalue
+    
     parser = argparse.ArgumentParser(description='Calculate hand odds of a card deck')
-    parser.add_argument('--ranks', '-r', type=int, default=13, help='Number of different ranks (default: 13)')
-    parser.add_argument('--suits', '-s', type=int, default=4, help='Number of different suits (default: 4)')
-    parser.add_argument('--hand_size', type=int, default=5, help='Number of cards per hand (default: 5)')
+    parser.add_argument('--ranks', '-r', default=13, type=check_more_than_1,
+            help='Number of different ranks (default: 13)')
+    parser.add_argument('--suits', '-s', default=4, type=check_more_than_1,
+            help='Number of different suits (default: 4)')
+    parser.add_argument('--hand_size', default=5, type=check_more_than_1,
+            help='Number of cards per hand (default: 5)')
     args = parser.parse_args()
 
     ranks = args.ranks          # Standard deck has 13 ranks from A - K
@@ -141,5 +154,5 @@ if __name__ == "__main__":
         table.append([hand_type, count, odds])
 
     table.append(["all hands", hand_count, 1])
-    table.sort(key=lambda x: x[1])
+    table.sort(key=itemgetter(1))
     print(tabulate(table, headers=headers))
