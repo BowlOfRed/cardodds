@@ -1,7 +1,7 @@
 import argparse
 from operator import itemgetter
 from itertools import combinations
-from collections import defaultdict
+from collections import defaultdict, Counter
 from tabulate import tabulate
 
 
