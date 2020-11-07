@@ -1,13 +1,13 @@
 import argparse
 from operator import itemgetter
-from itertools import combinations
+from itertools import combinations, product
 from collections import defaultdict, Counter
 
 # from tabulate import tabulate
 
 
 class deck:
-    def __init__(self, total_ranks, total_suits, aces_low=True, aces_high=True):
+    def __init__(self, total_ranks=13, total_suits=4, aces_low=True, aces_high=True):
         self.ranks = total_ranks
         self.suits = total_suits
         self.aces_low = aces_low
@@ -17,10 +17,7 @@ class deck:
         ranks = range(self.ranks)
         suits = range(self.suits)
 
-        for suit in suits:
-            for rank in ranks:
-                card = (rank, suit)
-                self.deck.append(card)
+        self.deck = product(ranks, suits)
 
     def calc_odds(self, hand_size=5, drawing_hands=False):
         combos = combinations(self.deck, hand_size)
@@ -29,8 +26,16 @@ class deck:
         for nth_hand, hand in enumerate(combos, start=1):
 
             flush = self._is_flush(hand)
-            if flush:
+            straight = self._is_straight(hand)
+            if flush and straight:
+                poker_hand_count["straight flush"] += 1
+            elif flush:
                 poker_hand_count["flush"] += 1
+            elif straight:
+                poker_hand_count["straight"] += 1
+            set_info = self._count_sets(hand)
+            if set_info:
+                poker_hand_count[str(set_info)] += 1
 
         poker_hand_count["all hands"] = nth_hand
         self.odds = poker_hand_count
