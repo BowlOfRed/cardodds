@@ -32,3 +32,15 @@ def test_straight():
     assert deck._is_straight(d, hands[1]) == False
     assert deck._is_straight(d, hands[2]) == False
     assert deck._is_straight(d, hands[4]) == True
+
+
+def test_sets():
+    assert deck._count_sets("foo", ((0, 0), (0, 2))) == [2]
+    assert deck._count_sets("foo", hands[0]) == []
+    assert deck._count_sets("foo", hands[1]) == [4]
+    assert deck._count_sets("foo", hands[2]) == [2, 3]
+    assert deck._count_sets("foo", hands[3]) == []
+    assert deck._count_sets("foo", hands[5]) == [3]
+    assert deck._count_sets("foo", hands[6]) == [2, 2]
+    assert deck._count_sets("foo", hands[7]) == [2]
+    assert deck._count_sets("foo", hands[8]) == []

@@ -69,25 +69,24 @@ class deck:
                 return False
         return True
 
-
-def count_sets(hand):
-    # Given a hand of cards, indicate the number of "sets" of each rank
-    # Output count of each set with more than 1 member
-    ranks = sorted([x[0] for x in hand])
-    large_sets = []
-    set_size = 0
-    last_rank = -1
-    for rank in ranks:
-        if rank != last_rank:
-            if set_size > 1:
-                large_sets.append(set_size)
-            set_size = 1
-            last_rank = rank
-        else:
-            set_size += 1
-    if set_size > 1:
-        large_sets.append(set_size)
-    return sorted(large_sets)
+    def _count_sets(self, hand):
+        # Given a hand of cards, indicate the number of "sets" of each rank
+        # Output count of each set with more than 1 member
+        ranks = sorted([x[0] for x in hand])
+        large_sets = []
+        set_size = 0
+        last_rank = -1
+        for rank in ranks:
+            if rank != last_rank:
+                if set_size > 1:
+                    large_sets.append(set_size)
+                set_size = 1
+                last_rank = rank
+            else:
+                set_size += 1
+        if set_size > 1:
+            large_sets.append(set_size)
+        return sorted(large_sets)
 
 
 def hand_name(set_representation):
