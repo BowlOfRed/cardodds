@@ -2,17 +2,16 @@ import argparse
 from operator import itemgetter
 from itertools import combinations
 from collections import defaultdict, Counter
-#from tabulate import tabulate
+
+# from tabulate import tabulate
 
 
 class deck:
-
-    def __init__(self, total_ranks, total_suits, aces_low = True, aces_high = True):
+    def __init__(self, total_ranks, total_suits, aces_low=True, aces_high=True):
         self.ranks = total_ranks
         self.suits = total_suits
         self.aces_low = aces_low
         self.aces_high = aces_high
-
 
         self.deck = []
         ranks = range(self.ranks)
@@ -23,20 +22,18 @@ class deck:
                 card = (rank, suit)
                 self.deck.append(card)
 
-
-    def calc_odds(self, hand_size = 5, drawing_hands = False):
+    def calc_odds(self, hand_size=5, drawing_hands=False):
         combos = combinations(self.deck, hand_size)
 
-        poker_hand_count = Counter() 
+        poker_hand_count = Counter()
         for nth_hand, hand in enumerate(combos, start=1):
 
             flush = self._is_flush(hand)
             if flush:
                 poker_hand_count["flush"] += 1
-            
+
         poker_hand_count["all hands"] = nth_hand
         self.odds = poker_hand_count
-
 
     def _is_flush(self, hand):
         # Given a hand of cards, determine if a flush is held
@@ -47,7 +44,6 @@ class deck:
             if card[1] != suit:
                 return False
         return True
-
 
     def _is_straight(self, hand):
         # Given a hand of cards, indicate if a straight is held
@@ -67,7 +63,9 @@ class deck:
             if card != last:
                 if has_ace:
                     # See if straight is present if Ace is treated high rather than low.
-                    return self._is_straight([(x, 0) for x in ranks[1:]] + [(number_ranks, 0)])
+                    return self._is_straight(
+                        [(x, 0) for x in ranks[1:]] + [(number_ranks, 0)]
+                    )
                 return False
         return True
 
@@ -105,13 +103,13 @@ def hand_name(set_representation):
     # you may need to add new names (such as three pair).
 
     names = {
-            '[2]': 'one pair',
-            '[3]': 'three of a kind',
-            '[4]': 'four of a kind',
-            '[5]': 'five of a kind',
-            '[2, 2]': 'two pair',
-            '[2, 3]': 'full house'
-            }
+        "[2]": "one pair",
+        "[3]": "three of a kind",
+        "[4]": "four of a kind",
+        "[5]": "five of a kind",
+        "[2, 2]": "two pair",
+        "[2, 3]": "full house",
+    }
     return names.get(set_representation, set_representation)
 
 
@@ -125,18 +123,32 @@ if __name__ == "__main__":
         if ivalue <= 1:
             raise argparse.ArgumentTypeError("Argument must be integer larger than 1")
         return ivalue
-    
-    parser = argparse.ArgumentParser(description='Calculate hand odds of a card deck')
-    parser.add_argument('--ranks', '-r', default=13, type=check_more_than_1,
-            help='Number of different ranks (default: 13)')
-    parser.add_argument('--suits', '-s', default=4, type=check_more_than_1,
-            help='Number of different suits (default: 4)')
-    parser.add_argument('--hand_size', default=5, type=check_more_than_1,
-            help='Number of cards per hand (default: 5)')
+
+    parser = argparse.ArgumentParser(description="Calculate hand odds of a card deck")
+    parser.add_argument(
+        "--ranks",
+        "-r",
+        default=13,
+        type=check_more_than_1,
+        help="Number of different ranks (default: 13)",
+    )
+    parser.add_argument(
+        "--suits",
+        "-s",
+        default=4,
+        type=check_more_than_1,
+        help="Number of different suits (default: 4)",
+    )
+    parser.add_argument(
+        "--hand_size",
+        default=5,
+        type=check_more_than_1,
+        help="Number of cards per hand (default: 5)",
+    )
     args = parser.parse_args()
 
-    ranks = args.ranks          # Standard deck has 13 ranks from A - K
-    suits = args.suits          # Standard deck has 4 suits
+    ranks = args.ranks  # Standard deck has 13 ranks from A - K
+    suits = args.suits  # Standard deck has 4 suits
     hand_size = args.hand_size  # Normal poker hand has 5 cards
 
     deck = create_deck(ranks, suits)
@@ -150,12 +162,12 @@ if __name__ == "__main__":
 
         flush = is_flush(hand)
         straight = is_straight(hand, ranks)
-        if (flush and straight):
-            poker_hand_count['straight flush'] += 1
+        if flush and straight:
+            poker_hand_count["straight flush"] += 1
         elif flush:
-            poker_hand_count['flush'] += 1
+            poker_hand_count["flush"] += 1
         elif straight:
-            poker_hand_count['straight'] += 1
+            poker_hand_count["straight"] += 1
         set_info = count_sets(hand)
         if len(set_info) == 0:
             continue
