@@ -49,26 +49,27 @@ class deck:
         return True
 
 
-def is_straight(hand, number_ranks):
-    # Given a hand of cards, indicate if a straight is held
-    # first itme of card is rank, second item is suit
-    ranks = sorted([x[0] for x in hand])
-    last = ranks[0]
-    has_ace = False
+    def _is_straight(self, hand):
+        # Given a hand of cards, indicate if a straight is held
+        # first itme of card is rank, second item is suit
+        number_ranks = self.ranks
+        ranks = sorted([x[0] for x in hand])
+        last = ranks[0]
+        has_ace = False
 
-    # Rank 0 is an Ace.  Aces can also be rank = number_ranks.
-    # Only need to check the first card since list is sorted.
-    if ranks[0] == 0:
-        has_ace = True
+        # Rank 0 is an Ace.  Aces can also be rank = number_ranks.
+        # Only need to check the first card since list is sorted.
+        if ranks[0] == 0:
+            has_ace = True
 
-    for card in ranks[1:]:
-        last += 1
-        if card != last:
-            if has_ace:
-                # See if straight is present if Ace is treated high rather than low.
-                return is_straight([(x, 0) for x in ranks[1:]] + [(number_ranks, 0)], number_ranks)
-            return False
-    return True
+        for card in ranks[1:]:
+            last += 1
+            if card != last:
+                if has_ace:
+                    # See if straight is present if Ace is treated high rather than low.
+                    return self._is_straight([(x, 0) for x in ranks[1:]] + [(number_ranks, 0)])
+                return False
+        return True
 
 
 def count_sets(hand):

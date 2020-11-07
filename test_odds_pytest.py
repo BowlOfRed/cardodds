@@ -23,4 +23,12 @@ def test_flush():
     assert deck._is_flush('foo', hands[0]) == True
     assert deck._is_flush('foo', hands[1]) == False
 
+def test_straight():
+    d = deck(13, 4)
+    assert deck._is_straight(d, ((0, 1, 2), )) == True
+    assert deck._is_straight(d, hands[0]) == True
+    assert deck._is_straight(d, hands[1]) == False
+    assert deck._is_straight(d, hands[2]) == False
+    assert deck._is_straight(d, hands[4]) == True
+
 
