@@ -13,14 +13,12 @@ class deck:
         self.aces_low = aces_low
         self.aces_high = aces_high
 
-        self.deck = []
-        ranks = range(self.ranks)
-        suits = range(self.suits)
-
-        self.deck = product(ranks, suits)
+    @property
+    def cards(self):
+        return product(range(self.ranks), range(self.suits))
 
     def calc_odds(self, hand_size=5, drawing_hands=False):
-        combos = combinations(self.deck, hand_size)
+        combos = combinations(self.cards, hand_size)
 
         poker_hand_count = Counter()
         for nth_hand, hand in enumerate(combos, start=1):

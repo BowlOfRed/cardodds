@@ -13,10 +13,10 @@ hands = (
 )
 
 
-def test_basic_deck():
-    assert len(set(deck(13, 4).deck)) == 52
-    assert len(set(deck(2, 2).deck)) == 4
-    assert len(set(deck(20, 6).deck)) == 120
+def test_cards():
+    assert len(set(deck(4, 2).cards)) == 8
+    assert len(set(deck(13, 4).cards)) == 52
+    assert len(set(deck(20, 6).cards)) == 120
 
 
 def test_flush():
