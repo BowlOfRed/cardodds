@@ -2,6 +2,7 @@ import argparse
 from operator import itemgetter
 from itertools import combinations, product
 from collections import defaultdict, Counter
+import time
 
 # from tabulate import tabulate
 
@@ -24,25 +25,30 @@ class deck:
         return product(range(self.ranks), range(self.suits))
 
     def calc_odds(self, hand_size=5, drawing_hands=False):
+        self._generate_straight_sets(hand_size)
+        start = time.perf_counter()
         combos = combinations(self.cards, hand_size)
 
-        poker_hand_count = Counter()
+        poker_odds = Counter()
+        poker_odds.hand_size = hand_size
         for nth_hand, hand in enumerate(combos, start=1):
 
             flush = self._is_flush(hand)
             straight = self._is_straight(hand)
             if flush and straight:
-                poker_hand_count["straight flush"] += 1
+                poker_odds["straight flush"] += 1
             elif flush:
-                poker_hand_count["flush"] += 1
+                poker_odds["flush"] += 1
             elif straight:
-                poker_hand_count["straight"] += 1
+                poker_odds["straight"] += 1
             set_info = self._count_sets(hand)
             if set_info:
-                poker_hand_count[str(set_info)] += 1
+                poker_odds[str(set_info)] += 1
 
-        poker_hand_count["all hands"] = nth_hand
-        self.odds = poker_hand_count
+        poker_odds["all hands"] = nth_hand
+        self.odds = poker_odds
+        end = time.perf_counter()
+        self.elapsed = end - start
 
     def _is_flush(self, hand):
         # Given a hand of cards, determine if a flush is held
@@ -55,28 +61,11 @@ class deck:
         return True
 
     def _is_straight(self, hand):
-        # Given a hand of cards, indicate if a straight is held
-        # first itme of card is rank, second item is suit
-        number_ranks = self.ranks
-        ranks = sorted([x[0] for x in hand])
-        last = ranks[0]
-        has_ace = False
-
-        # Rank 0 is an Ace.  Aces can also be rank = number_ranks.
-        # Only need to check the first card since list is sorted.
-        if ranks[0] == 0:
-            has_ace = True
-
-        for card in ranks[1:]:
-            last += 1
-            if card != last:
-                if has_ace:
-                    # See if straight is present if Ace is treated high rather than low.
-                    return self._is_straight(
-                        [(x, 0) for x in ranks[1:]] + [(number_ranks, 0)]
-                    )
-                return False
-        return True
+        # Given a hand of cards, determine if a flush is held
+        # (all cards have same suit)
+        # first item of card is rank, second item is suit
+        h = hand
+        return {x[0] for x in hand} in self.full_straights
 
     def _count_sets(self, hand):
         # Given a hand of cards, indicate the number of "sets" of each rank
@@ -98,7 +87,6 @@ class deck:
         return sorted(large_sets)
 
     def _generate_straight_sets(self, hand_size, drawing_straights=False):
-
         # Generate sets that can be use for comparisons
         # of straights and optionally near-straights
 

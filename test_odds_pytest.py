@@ -20,18 +20,24 @@ def test_cards():
 
 
 def test_flush():
-    assert deck._is_flush("foo", ((0, 0),)) == True
-    assert deck._is_flush("foo", hands[0]) == True
-    assert deck._is_flush("foo", hands[1]) == False
+    d = deck(13, 4)
+    assert d._is_flush(hands[0]) == True
+    assert d._is_flush(hands[1]) == False
+    assert d._is_flush(hands[2]) == False
+    assert d._is_flush(hands[3]) == True
+    assert d._is_flush(hands[4]) == False
+    assert d._is_flush(hands[5]) == False
+    assert d._is_flush(((0, 0),)) == True
 
 
 def test_straight():
     d = deck(13, 4)
-    assert deck._is_straight(d, ((0, 1, 2),)) == True
+    d._generate_straight_sets(5)
     assert deck._is_straight(d, hands[0]) == True
     assert deck._is_straight(d, hands[1]) == False
     assert deck._is_straight(d, hands[2]) == False
     assert deck._is_straight(d, hands[4]) == True
+    assert deck._is_straight(d, ((0, 1, 2),)) == False  # short hand
 
 
 def test_sets():
@@ -46,7 +52,7 @@ def test_sets():
     assert deck._count_sets("foo", hands[8]) == []
 
 
-def test_straights():
+def test_straight_generation():
     d = deck(13, 4)
     d._generate_straight_sets(5)
     assert {0, 1, 2, 3, 4} in d.full_straights
