@@ -7,11 +7,17 @@ from collections import defaultdict, Counter
 
 
 class deck:
-    def __init__(self, total_ranks=13, total_suits=4, aces_low=True, aces_high=True):
+    def __init__(
+        self,
+        total_ranks=13,
+        total_suits=4,
+        aces_low_straight=True,
+        aces_high_straight=True,
+    ):
         self.ranks = total_ranks
         self.suits = total_suits
-        self.aces_low = aces_low
-        self.aces_high = aces_high
+        self.aces_low_straight = aces_low_straight
+        self.aces_high_straight = aces_high_straight
 
     @property
     def cards(self):
@@ -90,6 +96,22 @@ class deck:
         if set_size > 1:
             large_sets.append(set_size)
         return sorted(large_sets)
+
+    def _generate_straight_sets(self, hand_size, drawing_straights=False):
+
+        # Generate sets that can be use for comparisons
+        # of straights and optionally near-straights
+
+        # simple straights
+        full_straights = set()
+        starting_card = 0 if self.aces_low_straight else 1
+        for low_card in range(starting_card, self.ranks - hand_size + 1):
+            full_straights.add(frozenset(range(low_card, low_card + hand_size)))
+        if self.aces_high_straight:
+            high_straight = set(range(low_card + 1, low_card + hand_size))
+            high_straight.add(0)
+            full_straights.add(frozenset(high_straight))
+        self.full_straights = full_straights
 
 
 def hand_name(set_representation):

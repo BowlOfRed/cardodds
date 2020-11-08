@@ -44,3 +44,37 @@ def test_sets():
     assert deck._count_sets("foo", hands[6]) == [2, 2]
     assert deck._count_sets("foo", hands[7]) == [2]
     assert deck._count_sets("foo", hands[8]) == []
+
+
+def test_straights():
+    d = deck(13, 4)
+    d._generate_straight_sets(5)
+    assert {0, 1, 2, 3, 4} in d.full_straights
+    assert {1, 2, 3, 4, 5} in d.full_straights
+    assert {5, 6, 7, 8, 9} in d.full_straights
+    assert {9, 10, 11, 12, 0} in d.full_straights
+    assert {0, 1, 2, 3, 5} not in d.full_straights
+
+    d = deck(13, 4, aces_low_straight=False)
+    d._generate_straight_sets(5)
+    assert {0, 1, 2, 3, 4} not in d.full_straights
+    assert {1, 2, 3, 4, 5} in d.full_straights
+    assert {5, 6, 7, 8, 9} in d.full_straights
+    assert {9, 10, 11, 12, 0} in d.full_straights
+    assert {0, 1, 2, 3, 5} not in d.full_straights
+
+    d = deck(13, 4, aces_high_straight=False)
+    d._generate_straight_sets(5)
+    assert {0, 1, 2, 3, 4} in d.full_straights
+    assert {1, 2, 3, 4, 5} in d.full_straights
+    assert {5, 6, 7, 8, 9} in d.full_straights
+    assert {9, 10, 11, 12, 0} not in d.full_straights
+    assert {0, 1, 2, 3, 5} not in d.full_straights
+
+    d = deck(13, 4, aces_low_straight=False, aces_high_straight=False)
+    d._generate_straight_sets(5)
+    assert {0, 1, 2, 3, 4} not in d.full_straights
+    assert {1, 2, 3, 4, 5} in d.full_straights
+    assert {5, 6, 7, 8, 9} in d.full_straights
+    assert {9, 10, 11, 12, 0} not in d.full_straights
+    assert {0, 1, 2, 3, 5} not in d.full_straights
