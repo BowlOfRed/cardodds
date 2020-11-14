@@ -55,32 +55,51 @@ def test_sets():
 def test_straight_generation():
     d = deck(13, 4)
     d._generate_straight_sets(5)
-    assert {0, 1, 2, 3, 4} in d.full_straights
-    assert {1, 2, 3, 4, 5} in d.full_straights
-    assert {5, 6, 7, 8, 9} in d.full_straights
-    assert {9, 10, 11, 12, 0} in d.full_straights
-    assert {0, 1, 2, 3, 5} not in d.full_straights
+    assert {0, 1, 2, 3, 4} in d.hand_sets["full_straights"]
+    assert {1, 2, 3, 4, 5} in d.hand_sets["full_straights"]
+    assert {5, 6, 7, 8, 9} in d.hand_sets["full_straights"]
+    assert {9, 10, 11, 12, 0} in d.hand_sets["full_straights"]
+    assert {0, 1, 2, 3, 5} not in d.hand_sets["full_straights"]
+
+    assert {0, 1, 3, 4} in d.hand_sets["straight_minus_1"]
+    assert {1, 2, 3, 5} in d.hand_sets["straight_minus_1"]
+    assert {3, 5, 9, 12} not in d.hand_sets["straight_minus_1"]
 
     d = deck(13, 4, aces_low_straight=False)
     d._generate_straight_sets(5)
-    assert {0, 1, 2, 3, 4} not in d.full_straights
-    assert {1, 2, 3, 4, 5} in d.full_straights
-    assert {5, 6, 7, 8, 9} in d.full_straights
-    assert {9, 10, 11, 12, 0} in d.full_straights
-    assert {0, 1, 2, 3, 5} not in d.full_straights
+    #assert {0, 1, 2, 3, 4} not in d.hand_sets["full_straights"]
+    #assert {1, 2, 3, 4, 5} in d.hand_sets["full_straights"]
+    #assert {5, 6, 7, 8, 9} in d.hand_sets["full_straights"]
+    #assert {9, 10, 11, 12, 0} in d.hand_sets["full_straights"]
+    #assert {0, 1, 2, 3, 5} not in d.hand_sets["full_straights"]
+    #assert {0, 1, 7, 3, 4} not in d.hand_sets["straight_minus_1"]
+    #assert {8, 1, 2, 3, 6} in d.hand_sets["straight_minus_1"]
+    #assert {9, 8, 5, 3, 6} in d.hand_sets["straight_minus_1"]
+    #assert {0, 12, 10, 11, 6} in d.hand_sets["straight_minus_1"]
+    #assert {1, 3, 5, 7, 9} not in d.hand_sets["straight_minus_1"]
 
     d = deck(13, 4, aces_high_straight=False)
     d._generate_straight_sets(5)
-    assert {0, 1, 2, 3, 4} in d.full_straights
-    assert {1, 2, 3, 4, 5} in d.full_straights
-    assert {5, 6, 7, 8, 9} in d.full_straights
-    assert {9, 10, 11, 12, 0} not in d.full_straights
-    assert {0, 1, 2, 3, 5} not in d.full_straights
+    #assert {0, 1, 2, 3, 4} in d.hand_sets["full_straights"]
+    #assert {1, 2, 3, 4, 5} in d.hand_sets["full_straights"]
+    #assert {5, 6, 7, 8, 9} in d.hand_sets["full_straights"]
+    #assert {9, 10, 11, 12, 0} not in d.hand_sets["full_straights"]
+    #assert {0, 1, 2, 3, 5} not in d.hand_sets["full_straights"]
+    #assert {0, 1, 7, 3, 4} in d.hand_sets["straight_minus_1"]
+    #assert {8, 1, 2, 3, 6} in d.hand_sets["straight_minus_1"]
+    #assert {9, 8, 5, 3, 6} in d.hand_sets["straight_minus_1"]
+    #assert {0, 12, 10, 11, 6} not in d.hand_sets["straight_minus_1"]
+    #assert {1, 3, 5, 7, 9} not in d.hand_sets["straight_minus_1"]
 
     d = deck(13, 4, aces_low_straight=False, aces_high_straight=False)
     d._generate_straight_sets(5)
-    assert {0, 1, 2, 3, 4} not in d.full_straights
-    assert {1, 2, 3, 4, 5} in d.full_straights
-    assert {5, 6, 7, 8, 9} in d.full_straights
-    assert {9, 10, 11, 12, 0} not in d.full_straights
-    assert {0, 1, 2, 3, 5} not in d.full_straights
+    #assert {0, 1, 2, 3, 4} not in d.hand_sets["full_straights"]
+    #assert {1, 2, 3, 4, 5} in d.hand_sets["full_straights"]
+    #assert {5, 6, 7, 8, 9} in d.hand_sets["full_straights"]
+    #assert {9, 10, 11, 12, 0} not in d.hand_sets["full_straights"]
+    #assert {0, 1, 2, 3, 5} not in d.hand_sets["full_straights"]
+    #assert {0, 1, 7, 3, 4} not in d.hand_sets["straight_minus_1"]
+    #assert {8, 1, 2, 3, 6} in d.hand_sets["straight_minus_1"]
+    #assert {9, 8, 5, 3, 6} in d.hand_sets["straight_minus_1"]
+    #assert {0, 12, 10, 11, 6} not in d.hand_sets["straight_minus_1"]
+    #assert {1, 3, 5, 7, 9} not in d.hand_sets["straight_minus_1"]

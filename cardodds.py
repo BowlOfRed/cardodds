@@ -65,7 +65,7 @@ class deck:
         # (all cards have same suit)
         # first item of card is rank, second item is suit
         h = hand
-        return {x[0] for x in hand} in self.full_straights
+        return {x[0] for x in hand} in self.hand_sets["full_straights"]
 
     def _count_sets(self, hand):
         # Given a hand of cards, indicate the number of "sets" of each rank
@@ -86,7 +86,7 @@ class deck:
             large_sets.append(set_size)
         return sorted(large_sets)
 
-    def _generate_straight_sets(self, hand_size, drawing_straights=False):
+    def _generate_straight_sets(self, hand_size):
         # Generate sets that can be use for comparisons
         # of straights and optionally near-straights
 
@@ -99,7 +99,20 @@ class deck:
             high_straight = set(range(low_card + 1, low_card + hand_size))
             high_straight.add(0)
             full_straights.add(frozenset(high_straight))
-        self.full_straights = full_straights
+        self.hand_sets = {}
+        self.hand_sets["full_straights"] = full_straights
+
+        # drawing straights
+        straight_minus_1 = set()
+        for hand in full_straights:
+            c = combinations(hand, len(hand) - 1)
+            straight_minus_1 |= set(frozenset(x) for x in c)
+        self.hand_sets["straight_minus_1"] = straight_minus_1
+
+        straight_minus_2 = set()
+        for hand in straight_minus_1:
+            straight_minus_2 |= set(combinations(hand, len(hand) - 1))
+        self.hand_sets["straight_minus_2"] = straight_minus_2
 
 
 def hand_name(set_representation):
