@@ -20,6 +20,25 @@ class deck:
         self.aces_low_straight = aces_low_straight
         self.aces_high_straight = aces_high_straight
 
+        # Given a string representation of a count of sets,
+        # return a common name for that set distribution.
+        # Example [2] represents a single pair, while
+        # [2, 3] represents a full house.  The count of sets
+        # is always to be sorted.
+
+        # The current map has names for all sets possible in
+        # a five-card hand (including some that are not possible
+        # with a standard deck).  If simulating hands larger than 5,
+        # you may need to add new names (such as three pair).
+        self.set_names = {
+            "[2]": "one pair",
+            "[3]": "three of a kind",
+            "[4]": "four of a kind",
+            "[5]": "five of a kind",
+            "[2, 2]": "two pair",
+            "[2, 3]": "full house",
+        }
+
     @property
     def cards(self):
         return product(range(self.ranks), range(self.suits))
@@ -113,29 +132,6 @@ class deck:
         for hand in straight_minus_1:
             straight_minus_2 |= set(combinations(hand, len(hand) - 1))
         self.hand_sets["straight_minus_2"] = straight_minus_2
-
-
-def hand_name(set_representation):
-    # Given a string representation of a count of sets,
-    # return a common name for that set distribution.
-    # Example [2] represents a single pair, while
-    # [2, 3] represents a full house.  The count of sets
-    # is always to be sorted.
-
-    # The current map has names for all sets possible in
-    # a five-card hand (including some that are not possible
-    # with a standard deck).  If simulating hands larger than 5,
-    # you may need to add new names (such as three pair).
-
-    names = {
-        "[2]": "one pair",
-        "[3]": "three of a kind",
-        "[4]": "four of a kind",
-        "[5]": "five of a kind",
-        "[2, 2]": "two pair",
-        "[2, 3]": "full house",
-    }
-    return names.get(set_representation, set_representation)
 
 
 if __name__ == "__main__":
