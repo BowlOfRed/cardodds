@@ -74,10 +74,7 @@ class deck:
         # (all cards have same suit)
         # first item of card is rank, second item is suit
         suit = hand[0][1]
-        for card in hand[1:]:
-            if card[1] != suit:
-                return False
-        return True
+        return all(x[1] == suit for x in hand[1:])
 
     def _is_straight(self, hand):
         # Given a hand of cards, determine if a flush is held
@@ -133,40 +130,75 @@ class deck:
             straight_minus_2 |= set(combinations(hand, len(hand) - 1))
         self.hand_sets["straight_minus_2"] = straight_minus_2
 
+    def _parse_command_line(self):
+        def check_more_than_1(value):
+            try:
+                ivalue = int(value)
+            except ValueError:
+                raise argparse.ArgumentTypeError(
+                    "Argument must be integer larger than 1"
+                )
+            if ivalue <= 1:
+                raise argparse.ArgumentTypeError(
+                    "Argument must be integer larger than 1"
+                )
+            return ivalue
+
+        def str2bool(v):
+            if isinstance(v, bool):
+                return v
+            if v.lower() in ("yes", "true", "on", "t", "y", "1"):
+                return True
+            elif v.lower() in ("no", "false", "off", "f", "n", "0"):
+                return False
+            else:
+                raise argparse.ArgumentTypeError("Boolean value expected.")
+
+        def str2boolk(value):
+            return value
+
+        parser = argparse.ArgumentParser(
+            description="Calculate hand odds of a card deck"
+        )
+        parser.add_argument(
+            "--ranks",
+            "-r",
+            dest="total_ranks",
+            default=13,
+            type=check_more_than_1,
+            help="Number of different ranks (default: 13)",
+        )
+        parser.add_argument(
+            "--suits",
+            "-s",
+            dest="total_suits",
+            default=4,
+            type=check_more_than_1,
+            help="Number of different suits (default: 4)",
+        )
+        parser.add_argument(
+            "--hand_size",
+            dest="default_hand_size",
+            default=5,
+            type=check_more_than_1,
+            help="Number of cards per hand (default: 5)",
+        )
+        parser.add_argument(
+            "--aces-high-straight", default="yes", type=str2bool, required=False
+        )
+        parser.add_argument(
+            "--aces-low-straight", default="yes", type=str2bool, required=False
+        )
+        args = parser.parse_args()
+        breakpoint()
+        x = 1
+
 
 if __name__ == "__main__":
 
-    def check_more_than_1(value):
-        try:
-            ivalue = int(value)
-        except ValueError:
-            raise argparse.ArgumentTypeError("Argument must be integer larger than 1")
-        if ivalue <= 1:
-            raise argparse.ArgumentTypeError("Argument must be integer larger than 1")
-        return ivalue
-
-    parser = argparse.ArgumentParser(description="Calculate hand odds of a card deck")
-    parser.add_argument(
-        "--ranks",
-        "-r",
-        default=13,
-        type=check_more_than_1,
-        help="Number of different ranks (default: 13)",
-    )
-    parser.add_argument(
-        "--suits",
-        "-s",
-        default=4,
-        type=check_more_than_1,
-        help="Number of different suits (default: 4)",
-    )
-    parser.add_argument(
-        "--hand_size",
-        default=5,
-        type=check_more_than_1,
-        help="Number of cards per hand (default: 5)",
-    )
-    args = parser.parse_args()
+    d = deck()
+    breakpoint()
+    d._parse_command_line()
 
     ranks = args.ranks  # Standard deck has 13 ranks from A - K
     suits = args.suits  # Standard deck has 4 suits
