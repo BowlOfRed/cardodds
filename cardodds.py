@@ -154,9 +154,6 @@ class deck:
             else:
                 raise argparse.ArgumentTypeError("Boolean value expected.")
 
-        def str2boolk(value):
-            return value
-
         parser = argparse.ArgumentParser(
             description="Calculate hand odds of a card deck"
         )
