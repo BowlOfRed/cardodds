@@ -175,7 +175,7 @@ class deck:
         )
         parser.add_argument(
             "--hand_size",
-            dest="default_hand_size",
+            dest="hand_size",
             default=5,
             type=check_more_than_1,
             help="Number of cards per hand (default: 5)",
@@ -187,22 +187,21 @@ class deck:
             "--aces-low-straight", default="yes", type=str2bool, required=False
         )
         args = parser.parse_args()
-        breakpoint()
         x = 1
+        return args
 
 
 if __name__ == "__main__":
 
     d = deck()
-    breakpoint()
-    d._parse_command_line()
+    args = d._parse_command_line()
 
-    ranks = args.ranks  # Standard deck has 13 ranks from A - K
-    suits = args.suits  # Standard deck has 4 suits
+    ranks = args.total_ranks  # Standard deck has 13 ranks from A - K
+    suits = args.total_suits  # Standard deck has 4 suits
     hand_size = args.hand_size  # Normal poker hand has 5 cards
 
-    deck = create_deck(ranks, suits)
-    combos = combinations(deck, hand_size)
+    # deck = create_deck(ranks, suits)
+    combos = combinations(d.cards, hand_size)
 
     poker_hand_count = defaultdict(int)
     for hand_count, hand in enumerate(combos, start=1):
