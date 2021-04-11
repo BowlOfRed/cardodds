@@ -1,8 +1,11 @@
 import argparse
+import click
 from operator import itemgetter
 from itertools import combinations, product
-from collections import defaultdict, Counter
+from collections import Counter
 import time
+import math
+from tabulate import tabulate
 
 # from tabulate import tabulate
 
@@ -17,6 +20,7 @@ class deck:
     ):
         self.ranks = total_ranks
         self.suits = total_suits
+        self.cards = tuple(product(range(self.ranks), range(self.suits)))
         self.aces_low_straight = aces_low_straight
         self.aces_high_straight = aces_high_straight
 
@@ -39,9 +43,8 @@ class deck:
             "[2, 3]": "full house",
         }
 
-    @property
-    def cards(self):
-        return product(range(self.ranks), range(self.suits))
+    def __repr__(self):
+        return f"Deck({self.ranks=}, {self.suits=})"
 
     def calc_odds(self, hand_size=5, drawing_hands=False):
         self._generate_straight_sets(hand_size)
@@ -77,10 +80,8 @@ class deck:
         return all(x[1] == suit for x in hand[1:])
 
     def _is_straight(self, hand):
-        # Given a hand of cards, determine if a flush is held
-        # (all cards have same suit)
+        # Given a hand of cards, determine if a straight is held
         # first item of card is rank, second item is suit
-        h = hand
         return {x[0] for x in hand} in self.hand_sets["full_straights"]
 
     def _count_sets(self, hand):
@@ -118,12 +119,13 @@ class deck:
         self.hand_sets = {}
         self.hand_sets["full_straights"] = full_straights
 
-        # drawing straights
+        # drawing straights (later...)
         straight_minus_1 = set()
         for hand in full_straights:
             c = combinations(hand, len(hand) - 1)
             straight_minus_1 |= set(frozenset(x) for x in c)
         self.hand_sets["straight_minus_1"] = straight_minus_1
+        return
 
         straight_minus_2 = set()
         for hand in straight_minus_1:
@@ -175,7 +177,7 @@ class deck:
         )
         parser.add_argument(
             "--hand_size",
-            dest="default_hand_size",
+            dest="hand_size",
             default=5,
             type=check_more_than_1,
             help="Number of cards per hand (default: 5)",
@@ -187,22 +189,73 @@ class deck:
             "--aces-low-straight", default="yes", type=str2bool, required=False
         )
         args = parser.parse_args()
-        breakpoint()
-        x = 1
+        return args
+
+    def report_counts(self, hand_size, format="table", quiet=False):
+        # Prints a report to stdout based on card odds.
+        total_combinations = math.comb(len(self.cards), hand_size)
+        if not quiet:
+            print(f"Cards in deck: {len(self.cards)}")
+            print(f"Hand size: {hand_size}")
+            if total_combinations > 10 ** 7:
+                print(
+                    "Warning: this deck and hand combination may take a large amount of time"
+                )
+        combos = combinations(self.cards, hand_size)
+        self._generate_straight_sets(hand_size)
+        poker_hand_count = Counter()
+        for hand_count, hand in enumerate(combos, start=1):
+
+            flush = 0
+            straight = 0
+            flush = self._is_flush(hand)
+            straight = self._is_straight(hand)
+            if flush and straight:
+                poker_hand_count["straight flush"] += 1
+            elif flush:
+                poker_hand_count["flush"] += 1
+            elif straight:
+                poker_hand_count["straight"] += 1
+            set_info = self._count_sets(hand)
+            if not set_info:
+                continue
+            poker_hand_count[str(set_info)] += 1
+
+        table = []
+        header = ["hand type", "count", "1 in x odds"]
+        for hand_type, count in poker_hand_count.items():
+            if count:
+                odds = hand_count // count
+            else:
+                odds = "-"
+            table.append([self.set_names.get(hand_type, hand_type), count, odds])
+
+        table.append(["all hands", hand_count, 1])
+        table.sort(key=itemgetter(1))
+        print(tabulate(table, headers=header))
+
+
+@click.command()
+@click.option("--hand-size", "-h", default=5, help="Number of cards in each hand")
+def report(hand_size):
+    click.echo(f"{hand_size=}")
+    d = deck()
+    click.echo(d)
+    d.report_counts(hand_size)
 
 
 if __name__ == "__main__":
 
     d = deck()
-    breakpoint()
-    d._parse_command_line()
-
-    ranks = args.ranks  # Standard deck has 13 ranks from A - K
-    suits = args.suits  # Standard deck has 4 suits
+    report()
+    args = d._parse_command_line()
+    """
+    ranks = args.total_ranks  # Standard deck has 13 ranks from A - K
+    suits = args.total_suits  # Standard deck has 4 suits
     hand_size = args.hand_size  # Normal poker hand has 5 cards
 
-    deck = create_deck(ranks, suits)
-    combos = combinations(deck, hand_size)
+    # deck = create_deck(ranks, suits)
+    combos = combinations(d.cards, hand_size)
 
     poker_hand_count = defaultdict(int)
     for hand_count, hand in enumerate(combos, start=1):
@@ -237,3 +290,4 @@ if __name__ == "__main__":
     table.append(["all hands", hand_count, 1])
     table.sort(key=itemgetter(1))
     print(tabulate(table, headers=headers))
+    """

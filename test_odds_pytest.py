@@ -37,7 +37,7 @@ def test_straight():
     assert deck._is_straight(d, hands[1]) == False
     assert deck._is_straight(d, hands[2]) == False
     assert deck._is_straight(d, hands[4]) == True
-    assert deck._is_straight(d, ((0, 1, 2),)) == False  # short hand
+    assert deck._is_straight(d, ((0, 0), (1, 0), (2, 0),)) == False  # short hand
 
 
 def test_sets():
