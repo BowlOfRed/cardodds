@@ -118,7 +118,6 @@ class deck:
             full_straights.add(frozenset(high_straight))
         self.hand_sets = {}
         self.hand_sets["full_straights"] = full_straights
-        return
 
         # drawing straights (later...)
         straight_minus_1 = set()
@@ -126,6 +125,7 @@ class deck:
             c = combinations(hand, len(hand) - 1)
             straight_minus_1 |= set(frozenset(x) for x in c)
         self.hand_sets["straight_minus_1"] = straight_minus_1
+        return
 
         straight_minus_2 = set()
         for hand in straight_minus_1:
