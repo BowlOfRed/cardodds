@@ -196,7 +196,7 @@ class deck:
         total_combinations = math.comb(len(self.cards), hand_size)
         if not quiet:
             print(f"Cards in deck: {len(self.cards)}")
-            print(f"Hand size: {hand_size}")
+            print(f"Hand size: {hand_size}\n")
             if total_combinations > 10 ** 7:
                 print(
                     "Warning: this deck and hand combination may take a large amount of time"
@@ -236,17 +236,19 @@ class deck:
 
 
 @click.command()
-@click.option("--hand-size", "-h", default=5, help="Number of cards in each hand")
+@click.option("--hand-size", "-h", default=5, help="Number of cards to draw in each hand")
+@click.option("--ranks", "-r", default=13, help="Number of ranks of each suit in the deck")
+@click.option("--suits", "-s", default=4, help="Number of suits in the deck")
 def report(hand_size):
-    click.echo(f"{hand_size=}")
     d = deck()
-    click.echo(d)
     d.report_counts(hand_size)
 
 
 if __name__ == "__main__":
 
     d = deck()
+    d.report_counts(hand_size=5)
+    sys.exit(1)
     report()
     args = d._parse_command_line()
     """
